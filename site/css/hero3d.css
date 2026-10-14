@@ -1,0 +1,13 @@
+/* hero3d.css: layer for #hero-3d (js/hero3d.js). */
+.hero-3d{
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;
+  /* city placement, read by hero3d.js on resize (fractions of the element; +x right, +y up).
+     Desktop: Innere Stadt + arcs centred near (62 %, 40 %), above the Ask card. */
+  --hero3d-x:.12;--hero3d-y:.06;--hero3d-zoom:.9;
+}
+@media (max-width:699px){
+  /* phone: the city sits in the top area, above the headline */
+  .hero-3d{--hero3d-x:.08;--hero3d-y:.25;--hero3d-zoom:1.08}
+}
+/* opacity is scroll-driven (setScroll): no transition, own layer */
+.hero-3d__canvas{position:absolute;inset:0;width:100%;height:100%;display:block;will-change:opacity}

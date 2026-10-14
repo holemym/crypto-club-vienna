@@ -1,0 +1,58 @@
+/* Motion pack "confirm" (round 4). Things arrive the way a block is confirmed: short, decisive, then still.
+   Three primitives, assigned per block in js/motion.js (SPEC):
+     rise  content arrives: 20px up + fade, 0.8s expo.out, 70ms stagger inside one batch
+     mask  headings and hero lines rise out of their own line box
+     draw  lines, bars and frames draw open before the content they lead (scaleX / clip-path)
+   Scroll-linked (lerped): hero 3D, manifesto words, gallery lead frame. Loops: only the four round 3 moments.
+   States (hover, focus, press) are 160ms colour and border changes; press = scale .97.
+   Everything here is gated on html.m, which is never set under reduced motion, so the page is static and visible. */
+
+.m [data-m] { transition-delay: calc(var(--i, 0) * 70ms); }
+
+/* rise */
+.m [data-m="rise"] { opacity: 0; transform: translateY(20px); transition-property: opacity, transform; transition-duration: .7s, .9s; transition-timing-function: var(--e-out); }
+.m [data-m="rise"].is-in { opacity: 1; transform: none; }
+
+/* mask: the heading's own box clips its text */
+[data-m="mask"] > .m-in { display: block; }
+.m [data-m="mask"]:not(.is-done) { overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+.m [data-m="mask"] > .m-in { transform: translateY(108%); transition: transform 1s var(--e-out); transition-delay: inherit; }
+.m [data-m="mask"].is-in > .m-in { transform: none; }
+/* hero load: starts on first paint (no JS wait, so the headline counts as painted at once).
+   Title lines rise out of their line box, then lede, actions and the Ask card follow. */
+@keyframes m-line { from { transform: translateY(55%); } }  /* part of each line shows on the first frame, so the headline paints at once */
+@keyframes m-rise { from { opacity: 0; transform: translateY(20px); } }
+@keyframes m-unclip { to { overflow: visible; } }
+.m .hero-title .line { animation: m-unclip 0s linear 1.6s both; }
+.m .hero-title .line > span { animation: m-line 1.05s var(--e-out) both; }
+.m .hero-title .line:nth-child(2) > span { animation-delay: 90ms; }
+.m .hero .eyebrow { animation: m-rise .8s var(--e-out) both; }
+.m .hero-lede { animation: m-rise .8s var(--e-out) 260ms both; }
+.m .hero-ctas { animation: m-rise .8s var(--e-out) 340ms both; }
+.m .hero .ask { animation: m-rise .9s var(--e-out) 480ms both; }
+
+/* draw */
+.m [data-m="draw"] { transform: scaleX(0); transform-origin: 0 50%; transition: transform .9s var(--e-out); }
+.m [data-m="draw"].is-in { transform: none; }
+.m .gallery-lead[data-m="frame"] { clip-path: inset(8% 5% 8% 5%); transition: clip-path 1.3s var(--e-out); }
+.m .gallery-lead[data-m="frame"].is-in { clip-path: inset(0 0 0 0); }
+.m .wordmark[data-m="frame"] img { clip-path: inset(0 100% 0 0); transition: clip-path 1.5s var(--e-out); }
+.m .wordmark[data-m="frame"].is-in img { clip-path: inset(0 0 0 0); }
+
+/* bars and rules that belong to a rising item draw after it lands */
+.m .values li::before { transform: scaleX(0); transform-origin: 0 50%; transition: transform .8s var(--e-out) calc(var(--i, 0) * 70ms + 200ms); }
+.m .values li.is-in::before { transform: none; }
+.m .partner-list li::after { transform: scaleX(0); }
+.m .partner-list li.is-in::after { transform: none; }
+.m .formats-row::before { transform: scaleX(0); }
+.m .formats-row.is-in::before { transform: none; }
+.m .link-bar::after { background: var(--ink); transition: background .4s var(--e-out) .5s, border-color .4s var(--e-out) .5s; }
+.link-bar.is-in::after { background: var(--fog); }
+
+/* press feedback on every control */
+.btn, .nav-menu, .vm-chip { transition-property: background-color, border-color, color, transform; }
+.btn:active, .nav-menu:active, .vm-chip:active { transform: scale(.97); transition-duration: 90ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .m [data-m], .m [data-m] > .m-in, .m .hero-title .line > span, .m .hero .eyebrow, .m .hero-lede, .m .hero-ctas, .m .hero .ask { opacity: 1 !important; transform: none !important; clip-path: none !important; animation: none !important; }
+}

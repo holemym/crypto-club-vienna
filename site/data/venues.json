@@ -1,0 +1,217 @@
+{
+  "_note": "Coordinates are hand-placed from street addresses (±150 m). 'ccv': true marks places where Crypto Club Vienna has held events. Sources in ../../RESEARCH.md and reviews/R4-BRAND.md (Prisma by Lumia placed at the Krieau grandstand, ±300 m).",
+  "venues": [
+    {
+      "id": "lumia",
+      "name": "Startup House by Lumia",
+      "kind": "hub",
+      "district": 2,
+      "address": "Stella-Klein-Löw-Weg 8, 1020 Wien",
+      "lat": 48.2176,
+      "lng": 16.4103,
+      "lines": [
+        "U2"
+      ],
+      "ccv": true,
+      "note": "Event Nº2 · 20 Mar 2026 · Going Onchain · 23 Oct 2026",
+      "callout": "CCV · 23 Oct 2026"
+    },
+    {
+      "id": "prisma",
+      "name": "Prisma by Lumia",
+      "kind": "hub",
+      "district": 2,
+      "address": "Am Grünen Prater 2/Tribüne 2, 1020 Wien",
+      "lat": 48.2128,
+      "lng": 16.4128,
+      "lines": [
+        "U2"
+      ],
+      "ccv": true,
+      "note": "Crypto Summit 360° · 26 Jun 2026",
+      "callout": "CCV · Jun 2026"
+    },
+    {
+      "id": "fav224",
+      "name": "Favoritenstraße 224",
+      "kind": "scene",
+      "district": 10,
+      "address": "Favoritenstraße 224, 1100 Wien",
+      "lat": 48.159,
+      "lng": 16.3822,
+      "lines": [
+        "U1"
+      ],
+      "ccv": true,
+      "note": "Kick-off party · 30 May 2025",
+      "callout": "CCV · May 2025"
+    },
+    {
+      "id": "bitpanda",
+      "name": "Bitpanda",
+      "kind": "industry",
+      "district": 2,
+      "address": "Stella-Klein-Löw-Weg 17, 1020 Wien",
+      "lat": 48.218,
+      "lng": 16.4112,
+      "lines": [
+        "U2"
+      ],
+      "ccv": false,
+      "note": "Exchange HQ, Viertel Zwei"
+    },
+    {
+      "id": "web3hub",
+      "name": "Web3 Hub Vienna",
+      "kind": "hub",
+      "district": 22,
+      "address": "DC Tower 3, Donau-City-Straße 3, 1220 Wien",
+      "lat": 48.2316,
+      "lng": 16.4135,
+      "lines": [
+        "U1"
+      ],
+      "ccv": false,
+      "note": "DLT Austria · Vienna Blockchain Week"
+    },
+    {
+      "id": "wu",
+      "name": "WU Wien",
+      "kind": "uni",
+      "district": 2,
+      "address": "Welthandelsplatz 1, 1020 Wien",
+      "lat": 48.2134,
+      "lng": 16.4084,
+      "lines": [
+        "U2"
+      ],
+      "ccv": false,
+      "note": "Research Institute for Cryptoeconomics"
+    },
+    {
+      "id": "tu",
+      "name": "TU Wien",
+      "kind": "uni",
+      "district": 4,
+      "address": "Karlsplatz 13, 1040 Wien",
+      "lat": 48.199,
+      "lng": 16.3699,
+      "lines": [
+        "U1",
+        "U2",
+        "U4"
+      ],
+      "ccv": false
+    },
+    {
+      "id": "uniwien",
+      "name": "Universität Wien",
+      "kind": "uni",
+      "district": 1,
+      "address": "Universitätsring 1, 1010 Wien",
+      "lat": 48.213,
+      "lng": 16.3605,
+      "lines": [
+        "U2"
+      ],
+      "ccv": false
+    },
+    {
+      "id": "fhcampus",
+      "name": "FH Campus Wien",
+      "kind": "uni",
+      "district": 10,
+      "address": "Favoritenstraße 226, 1100 Wien",
+      "lat": 48.1586,
+      "lng": 16.3825,
+      "lines": [
+        "U1"
+      ],
+      "ccv": false
+    },
+    {
+      "id": "wexelerate",
+      "name": "weXelerate",
+      "kind": "hub",
+      "district": 2,
+      "address": "Praterstraße 1, 1020 Wien",
+      "lat": 48.2127,
+      "lng": 16.3797,
+      "lines": [
+        "U1",
+        "U4"
+      ],
+      "ccv": false
+    },
+    {
+      "id": "impacthub",
+      "name": "Impact Hub Vienna",
+      "kind": "hub",
+      "district": 7,
+      "address": "Lindengasse 56, 1070 Wien",
+      "lat": 48.2004,
+      "lng": 16.3488,
+      "lines": [
+        "U3"
+      ],
+      "ccv": false
+    },
+    {
+      "id": "kameel",
+      "name": "Zum Schwarzen Kameel",
+      "kind": "scene",
+      "district": 1,
+      "address": "Bognergasse 5, 1010 Wien",
+      "lat": 48.2097,
+      "lng": 16.3687,
+      "lines": [
+        "U3"
+      ],
+      "ccv": false,
+      "note": "Where Krypto Kameel began"
+    },
+    {
+      "id": "metalab",
+      "name": "Metalab",
+      "kind": "scene",
+      "district": 1,
+      "address": "Rathausstraße 6, 1010 Wien",
+      "lat": 48.2117,
+      "lng": 16.3567,
+      "lines": [
+        "U2"
+      ],
+      "ccv": false,
+      "note": "Hackerspace. Home of CryptoParty Wien (privacy and encryption workshops)"
+    },
+    {
+      "id": "mq",
+      "name": "MQ Libelle",
+      "kind": "scene",
+      "district": 7,
+      "address": "Museumsplatz 1, 1070 Wien",
+      "lat": 48.2033,
+      "lng": 16.3587,
+      "lines": [
+        "U2"
+      ],
+      "ccv": false,
+      "note": "VI3NNA Congress"
+    },
+    {
+      "id": "stephansplatz",
+      "name": "Stephansplatz",
+      "kind": "scene",
+      "district": 1,
+      "address": "Stephansplatz, 1010 Wien",
+      "lat": 48.2085,
+      "lng": 16.373,
+      "lines": [
+        "U1",
+        "U3"
+      ],
+      "ccv": false,
+      "note": "Centre of Vienna, 48.2082° N 16.3738° E"
+    }
+  ]
+}

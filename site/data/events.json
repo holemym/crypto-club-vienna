@@ -1,0 +1,58 @@
+{
+  "_note": "Oldest first. Add a new event at the end; set status 'upcoming' and an ISO start to switch on the live state. Sources: Luma organiser page, Eventbrite, cryptoclubvienna.com (checked 2026-10-05, reviews/R4-BRAND.md).",
+  "events": [
+    {
+      "id": "kickoff-2025",
+      "title": "Kick-off Party",
+      "status": "past",
+      "start": "2025-05-30T18:00:00+02:00",
+      "venue": "Favoritenstraße 224",
+      "address": "Favoritenstraße 224, 1100 Wien",
+      "district": 10,
+      "format": "Party · networking",
+      "summary": "Our kick-off party. An evening of networking and all things crypto in Favoriten.",
+      "link": "https://www.eventbrite.com/e/kick-off-party-by-crypto-club-vienna-tickets-1368077489599"
+    },
+    {
+      "id": "numero-2",
+      "title": "Event Nº2: Crypto and the Future of Money in Europe",
+      "status": "past",
+      "start": "2026-03-20T17:00:00+01:00",
+      "venue": "Startup House by Lumia",
+      "address": "Stella-Klein-Löw-Weg 8, 1020 Wien",
+      "district": 2,
+      "format": "4 industry speakers · networking",
+      "summary": "Four industry speakers on where money in Europe is heading, followed by networking, drinks and snacks.",
+      "link": "https://www.eventbrite.at/e/event-numero-2-crypto-and-the-future-of-money-in-europe-tickets-1983785413574"
+    },
+    {
+      "id": "summit-360",
+      "title": "Crypto Summit 360°",
+      "status": "past",
+      "start": "2026-06-26T17:00:00+02:00",
+      "venue": "Prisma by Lumia",
+      "address": "Am Grünen Prater 2/Tribüne 2, 1020 Wien",
+      "district": 2,
+      "format": "Speakers · panel · afterparty",
+      "attendees": 200,
+      "attendeesLabel": "200, sold out",
+      "summary": "Speakers, a panel talk and an afterparty. Free entrance, sold out at 200 guests.",
+      "link": "https://luma.com/7qmuups4"
+    },
+    {
+      "id": "going-onchain",
+      "title": "Going Onchain",
+      "status": "upcoming",
+      "start": "2026-10-23T17:00:00+02:00",
+      "venue": "Startup House by Lumia",
+      "address": "Stella-Klein-Löw-Weg 8, 1020 Wien",
+      "district": 2,
+      "format": "3 speakers · afterparty with DJ",
+      "summary": "Three speakers on how blockchain and Web3 move into everyday use: paying, building, investing. Doors open at 17:00.",
+      "cover": "assets/posters/poster-going-onchain-800.webp",
+      "coverAlt": "Going Onchain poster: 23.10.26, 17:00, How crypto enters your everyday life.",
+      "link": "https://luma.com/oybpqfqn",
+      "linkLabel": "Register on Luma"
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+/* "Questions people ask us": hero FAQ card (js/type.js askSkeleton / askLoop).
+   Zero layout shift: .ask has an explicit height per breakpoint, true before JS runs and
+   independent of fonts. Nothing inside ever changes the outer box.
+   Desktop (>1100px): answer card floats above a fixed dock (status + prompt + chips) and opens
+   upward with a clip reveal. Phone (<=1100px): one compact box; the question types in and the
+   answer replaces it in the same 4-line slot. */
+
+.ask {
+  /* desktop footprint = tallest card + dock */
+  --ask-lh: 24px;
+  --ask-lines: 5;
+  --ask-card-h: calc(2px + 44px + 28px + var(--ask-lines) * var(--ask-lh) + 37px);
+  --ask-dock-h: calc(120px - 36px);
+  --ask-glass: color-mix(in oklab, var(--ink-2) 94%, transparent);   /* round 4: near-solid surface, no blur */
+  --ask-edge: color-mix(in oklab, var(--paper) 12%, transparent);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 460px;
+  min-width: 0;        /* never let nowrap text widen a grid / flex parent */
+  height: calc(var(--ask-card-h) + var(--ask-dock-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: var(--paper);
+  font-family: var(--f-body);
+  text-align: left;
+  cursor: default;
+  contain: layout;
+}
+.ask-sr {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.ask-ui { position: relative; }
+.ask.is-paused *, .ask.is-paused *::before, .ask.is-paused *::after { animation-play-state: paused !important; }
+.ask-top { display: none; }
+
+/* glass surfaces */
+.ask-prompt, .ask-card {
+  background: var(--ask-glass);
+  border: 1px solid var(--ask-edge);
+  border-radius: var(--radius);
+}
+
+.ask-dock { position: relative; height: var(--ask-dock-h); display: flex; flex-direction: column; }
+
+/* ---------------- answer card: absolutely above the dock, revealed bottom-up ---------------- */
+.ask-card {
+  position: absolute; left: 0; right: 0; bottom: 100%;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path .75s var(--e-out);
+}
+.ask-card.is-open { clip-path: inset(0 0 0 0); }
+.ask-card-head {
+  display: flex; align-items: center; gap: 12px;
+  height: 44px; padding: 14px 18px 0;
+}
+.ask-tile {
+  flex: none; display: grid; grid-template-columns: repeat(2, 7px); gap: 2px;
+  padding: 6px; border: 1px solid var(--line); background: var(--ink);
+}
+.ask-tile i { width: 7px; height: 7px; background: var(--paper); }
+.ask-tile i:first-child { background: var(--accent); }
+.ask-who {
+  display: grid; gap: 3px; min-width: 0; white-space: nowrap;
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; line-height: 13px;
+}
+.ask-who b { font-weight: 500; color: var(--paper); }
+.ask-who > * { overflow: hidden; text-overflow: ellipsis; }
+.ask-who span { color: var(--fog); }
+.ask-answer {
+  margin: 12px 18px 16px;
+  font-size: .96875rem; line-height: var(--ask-lh); color: color-mix(in oklab, var(--paper) 92%, var(--fog));
+  max-height: calc(var(--ask-lines) * var(--ask-lh));
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--ask-lines); line-clamp: var(--ask-lines);
+  overflow: hidden;
+  text-wrap: pretty;
+}
+.ask-rest { visibility: hidden; }
+.ask-foot {
+  margin: 0 18px; height: 37px; padding-top: 11px;
+  border-top: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: .6875rem; line-height: 14px; letter-spacing: .08em; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--fog); transition: color .6s var(--e-out);
+}
+.ask-card.is-done .ask-foot { color: color-mix(in oklab, var(--paper) 80%, var(--fog)); }
+
+/* ---------------- status beats ---------------- */
+.ask-status { position: relative; flex: none; height: 26px; }
+.ask-thinking, .ask-scanning {
+  position: absolute; left: 2px; top: 50%;
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  opacity: 0; transform: translateY(calc(-50% + 3px));
+  transition: opacity .35s var(--e-out), transform .35s var(--e-out);
+}
+.ask-thinking.is-on, .ask-scanning.is-on { opacity: 1; transform: translateY(-50%); }
+.ask-thinking { font-size: .8125rem; color: var(--fog); gap: 5px; }
+.ask-thinking span { margin-right: 4px; }
+.ask-thinking i { width: 4px; height: 4px; background: var(--paper); animation: ask-bob 1.1s var(--e-io) infinite; }
+.ask-thinking i:nth-of-type(2) { animation-delay: .15s; }
+.ask-thinking i:nth-of-type(3) { animation-delay: .3s; }
+@keyframes ask-bob { 0%, 60%, 100% { transform: none; opacity: .45; } 30% { transform: translateY(-3px); opacity: 1; } }
+.ask-scanning {
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--fog); /* 6.2:1 on ink */
+}
+.ask-scanning i { width: 6px; height: 6px; background: var(--paper); animation: ask-blink 1s steps(1, end) infinite; }
+@keyframes ask-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .25; } }
+
+/* ---------------- prompt ---------------- */
+.ask-prompt {
+  position: relative; overflow: hidden; flex: none;
+  display: flex; align-items: center; gap: 12px;
+  height: 58px; padding: 10px 10px 10px 12px;
+}
+.ask-prompt::after {
+  content: ""; position: absolute; inset: -40% auto -40% -60%; width: 45%;
+  background: linear-gradient(105deg, transparent, rgb(236 232 223 / .05) 45%, rgb(236 232 223 / .09) 50%, transparent 60%);
+  transform: translateX(0) skewX(-18deg);
+  pointer-events: none;
+}
+@keyframes ask-sheen { 0%, 78% { transform: translateX(0) skewX(-18deg); } 100% { transform: translateX(420%) skewX(-18deg); } }
+.ask-num {
+  flex: none; width: 30px; height: 30px; display: grid; place-items: center;
+  border: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: 0; color: var(--fog);
+  font-variant-numeric: tabular-nums;
+}
+.ask-field { position: relative; flex: 1; min-width: 0; font-size: 1rem; line-height: 1.35; white-space: nowrap; overflow-x: clip; overflow-y: visible; display: flex; align-items: center; }
+.ask-q { color: var(--paper); border-right: 1px solid var(--paper); padding-right: 2px; animation: ask-caret-b .8s steps(1, end) infinite; }
+@keyframes ask-caret-b { 0% { border-right-color: var(--paper); } 46%, 100% { border-right-color: transparent; } }
+.ask-caret { display: none; }
+.ask-ph { position: absolute; left: 7px; top: 50%; transform: translateY(-50%); color: var(--fog); transition: opacity .2s; }
+.ask-prompt.has-text .ask-ph { opacity: 0; }
+.ask-send {
+  flex: none; position: relative; width: 36px; height: 36px;
+  border: 1px solid var(--line); background: var(--ink);
+  transition: background var(--d-ui) var(--e-out), border-color var(--d-ui);
+}
+.ask-send::before { content: ""; position: absolute; left: 50%; top: 11px; width: 1px; height: 14px; background: var(--paper); transform: translateX(-50%); }
+.ask-send::after {
+  content: ""; position: absolute; left: 50%; top: 11px; width: 7px; height: 7px;
+  border-left: 1px solid var(--paper); border-top: 1px solid var(--paper);
+  transform: translateX(-50%) rotate(45deg);
+}
+.ask-send.is-sent { background: var(--paper); border-color: var(--paper); }
+.ask-send.is-sent::before { background: var(--ink); }
+.ask-send.is-sent::after { border-color: var(--ink); }
+
+/* ---------------- chips ---------------- */
+.ask-chips { display: none; flex-wrap: nowrap; overflow: hidden; gap: 6px; height: 28px; margin-top: 8px; flex: none; }
+.ask-chip {
+  display: inline-flex; align-items: center; gap: 7px; height: 28px; flex: none;
+  padding: 0 9px 0 8px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--ink) 75%, transparent);
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fog);
+}
+.ask-chip::before { content: ""; width: 6px; height: 6px; border: 1px solid currentColor; flex: none; }
+.ask-chip:nth-child(1)::before { background: currentColor; }
+.ask-chip:nth-child(2)::before { background: linear-gradient(135deg, currentColor 50%, transparent 50%); }
+.ask-chip:nth-child(3)::before { background: linear-gradient(currentColor, currentColor) 0 0 / 50% 50% no-repeat; }
+.ask-chip:nth-child(4)::before { box-shadow: inset 0 0 0 1px var(--ink); background: currentColor; }
+
+/* ---------------- reduced motion: static card + previous / next in the chip row ---------------- */
+.ask-nav { position: absolute; left: 0; bottom: 0; height: 28px; display: flex; align-items: center; gap: 6px; }
+.ask-btn {
+  width: 28px; height: 28px; display: grid; place-items: center; padding: 0;
+  background: var(--ink-2); border: 1px solid var(--line); border-radius: var(--radius-btn); cursor: pointer;
+  font-family: var(--f-mono); font-size: .75rem; color: var(--paper);
+}
+.ask-btn:hover { border-color: var(--paper); }
+.ask-count { font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; color: var(--fog); min-width: 5ch; text-align: center; font-variant-numeric: tabular-nums; }
+.ask.is-static .ask-chips { visibility: hidden; }
+.ask.is-static .ask-q { animation: none; border-right-color: transparent; }
+.ask.is-static .ask-prompt::after { animation: none; opacity: 0; }
+
+/* ======================= phone: compact, one fixed box ======================= */
+@media (max-width: 1100px) {
+  .ask {
+    --ask-lh: 22px;
+    --ask-lines: 4;
+    max-width: none;
+    height: calc(2px + 12px + 20px + 8px + var(--ask-lines) * var(--ask-lh) + 14px);
+    display: block;
+  }
+  .ask-ui {
+    height: 100%;
+    padding: 12px 14px 14px;
+    background: var(--ask-glass);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    backdrop-filter: blur(16px) saturate(1.15);
+    border: 1px solid var(--ask-edge);
+  }
+  .ask-dock { position: static; height: auto; display: block; }
+  .ask-card-head, .ask-foot, .ask-chips, .ask-send, .ask-num, .ask-prompt::after { display: none; }
+
+  /* head row: FAQ index, then the question once the answer has replaced it */
+  .ask-top {
+    display: flex; align-items: center; gap: .9em; height: 20px; min-width: 0;
+    font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fog);
+    white-space: nowrap;
+  }
+  .ask-idx { flex: none; font-variant-numeric: tabular-nums; }
+  .ask-ctx {
+    flex: 1 1 0; width: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; text-transform: none; letter-spacing: 0;
+    font-family: var(--f-body); font-size: .8125rem; color: color-mix(in oklab, var(--paper) 70%, var(--fog));
+    opacity: 0; transition: opacity .35s var(--e-out);
+  }
+  .ask[data-phase="a"] .ask-ctx, .ask[data-phase="done"] .ask-ctx { opacity: 1; }
+
+  /* status sits on the right of the head row */
+  .ask-status { position: absolute; top: 12px; right: 14px; height: 20px; width: 50%; }
+  .ask-thinking, .ask-scanning { left: auto; right: 0; }
+
+  /* question and answer share one 4-line slot */
+  .ask-prompt, .ask-card {
+    position: absolute; left: 14px; right: 14px; top: 40px; bottom: auto;
+    height: calc(var(--ask-lines) * var(--ask-lh));
+    padding: 0; border: 0; background: none;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  .ask-prompt { display: block; transition: opacity .3s var(--e-out); }
+  .ask-field {
+    display: block; white-space: normal;
+    font-family: var(--f-display); font-weight: 600; font-size: 1.375rem; line-height: 1.15; letter-spacing: -0.01em;
+    font-variation-settings: "wdth" 90, "opsz" 48;
+  }
+  .ask-ph { top: 0; transform: none; }
+  .ask[data-phase="a"] .ask-prompt, .ask[data-phase="done"] .ask-prompt { opacity: 0; }
+
+  .ask-card { clip-path: none; opacity: 0; transition: opacity .3s var(--e-out); }
+  .ask-card.is-open { opacity: 1; }
+  .ask-answer { margin: 0; font-size: .9375rem; }
+
+  /* reduced motion: arrows in the head row */
+  .ask-nav { left: auto; right: 10px; bottom: auto; top: 8px; height: 28px; }
+  .ask.is-static .ask-ctx { opacity: 1; }
+  .ask.is-static .ask-top { padding-right: 100px; }
+  .ask.is-static .ask-idx { display: none; }
+}

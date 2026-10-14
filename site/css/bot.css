@@ -1,0 +1,212 @@
+/* CCV Telegram bot pane (js/bot.js initBot). Telegram structure, house language:
+   their card shape (15px, 1px line), ink ground, mono data. Fixed height, messages placed by transform. */
+
+.bot-term {
+  --bot-h: clamp(500px, 40vw, 580px);
+  position: relative;
+  min-width: 0;
+  height: var(--bot-h);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-body);
+  overflow: hidden;
+  contain: layout paint;
+}
+.bot-term.is-paused *, .bot-term.is-paused *::before { animation-play-state: paused !important; }
+.bot-pane { display: grid; grid-template-rows: 60px auto 1fr 64px; height: 100%; }
+
+/* ---------------- header ---------------- */
+.bot-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 16px;
+  background: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+}
+.bot-ava {
+  flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ink); border: 1px solid var(--line);
+}
+.bot-ava img { width: 20px; height: auto; }
+.bot-name { display: grid; gap: 4px; flex: 1 1 auto; width: 0; min-width: 0; line-height: 1.15; }
+.bot-name b { font-weight: 600; font-size: 1rem; letter-spacing: -0.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bot-name b span { font-weight: 400; color: var(--fog); }
+.bot-name > span {
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .02em; color: var(--fog);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bot-tag {
+  margin-left: auto; flex: none;
+  padding: 4px 8px; border: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fog);
+}
+
+/* pinned disclaimer, always visible */
+.bot-pin {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 16px 10px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in oklab, var(--ink-2) 55%, var(--ink));
+  font-family: var(--f-mono); font-size: .6875rem; line-height: 1.45; letter-spacing: .08em; text-transform: uppercase;
+  color: color-mix(in oklab, var(--paper) 82%, var(--fog));
+}
+.bot-pin-i {
+  flex: none; width: 16px; height: 16px; display: grid; place-items: center;
+  border: 1px solid currentColor; font-size: .625rem; letter-spacing: 0; text-transform: none; line-height: 1;
+}
+
+/* ---------------- log ---------------- */
+.bot-log {
+  position: relative; overflow: hidden;
+  background-color: var(--ink);
+  /* older messages fade out at the top edge instead of being sliced */
+  -webkit-mask-image: linear-gradient(transparent 0, #000 44px);
+  mask-image: linear-gradient(transparent 0, #000 44px);
+}
+.bot-msg {
+  position: absolute; top: 14px; left: 16px; right: 16px;
+  display: flex;
+  transition: transform .6s var(--e-out);
+  will-change: transform;
+}
+.bot-out { justify-content: flex-end; }
+.bot-in { justify-content: flex-start; }
+.bot-msg > * { opacity: 0; transform: translateY(8px); transition: opacity .35s var(--e-out), transform .5s var(--e-out); }
+.bot-msg.is-in > * { opacity: 1; transform: none; }
+
+.bot-bubble {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 12px 10px 14px;
+  background: var(--ink-3);
+  border: 1px solid color-mix(in oklab, var(--paper) 18%, var(--line));
+}
+.bot-cmd { font-family: var(--f-mono); font-size: .8125rem; letter-spacing: .02em; color: var(--paper); }
+.bot-ticks { display: inline-flex; gap: 2px; }
+.bot-ticks::before, .bot-ticks::after { content: ""; width: 4px; height: 4px; background: var(--fog); }
+
+.bot-typing .bot-bubble { background: var(--ink-2); border-color: var(--line); gap: 5px; padding: 14px 14px; }
+.bot-typing i { width: 5px; height: 5px; background: var(--paper); animation: bot-bob 1s var(--e-io) infinite; }
+.bot-typing i:nth-child(2) { animation-delay: .14s; }
+.bot-typing i:nth-child(3) { animation-delay: .28s; }
+@keyframes bot-bob { 0%, 60%, 100% { opacity: .35; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
+
+/* ---------------- reply card ---------------- */
+.bot-card {
+  width: min(100%, 500px);
+  padding: 14px 16px 12px;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--paper);
+}
+.bot-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 26px; opacity: 0; transition: opacity .3s var(--e-out); }
+.bot-card.is-head .bot-head { opacity: 1; }
+.bot-title { font-weight: 600; font-size: 1rem; letter-spacing: -0.005em; white-space: nowrap; }
+.bot-chip {
+  display: inline-flex; align-items: center; gap: 7px; flex: none;
+  height: 24px; padding: 0 8px;
+  border: 1px solid color-mix(in oklab, var(--paper) 35%, var(--line));
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--paper);
+  visibility: hidden;
+}
+.bot-card.is-done .bot-chip { visibility: visible; animation: bot-stamp .42s steps(3, end); }
+@keyframes bot-stamp { 0% { opacity: 0; } 34% { opacity: 1; background: var(--paper); color: var(--ink); } 67% { background: transparent; color: var(--paper); } 100% { opacity: 1; } }
+.bot-chip i { width: 7px; height: 7px; border: 1px solid currentColor; }
+.bot-chip[data-state="elevated"] i { background: currentColor; }
+.bot-chip[data-state="calm"] i { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 50% no-repeat; }
+
+.bot-rows { margin: 10px 0 0; }
+.bot-row {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 10px;
+  height: 27px; line-height: 27px;
+  font-family: var(--f-mono); font-size: .75rem; letter-spacing: .02em;
+  opacity: 0;
+}
+.bot-row.is-on { opacity: 1; }
+.bot-row dt { color: var(--fog); white-space: nowrap; }
+.bot-lead { border-bottom: 1px dotted color-mix(in oklab, var(--fog) 45%, transparent); transform: translateY(-4px); }
+.bot-row dd { margin: 0; color: var(--paper); text-align: right; white-space: nowrap; }
+.bot-rest { visibility: hidden; }
+
+.bot-spark {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; gap: 12px;
+  margin-top: 10px; padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase;
+}
+.bot-spark-k { color: var(--fog); white-space: nowrap; line-height: 1; }
+.bot-spark-v { color: var(--paper); white-space: nowrap; line-height: 1; opacity: 0; transition: opacity .3s var(--e-out) .4s; }
+.bot-bars { display: flex; align-items: flex-end; justify-content: flex-end; gap: 3px; height: 22px; min-width: 0; }
+.bot-bars i {
+  flex: 0 1 7px; min-width: 2px; height: calc(var(--v) * 100%);
+  background: color-mix(in oklab, var(--fog) 70%, var(--ink));
+  transform: scaleY(0); transform-origin: 50% 100%;
+  transition: transform .5s var(--e-out) calc(var(--i) * 28ms);
+}
+.bot-bars i:last-child { background: var(--paper); }
+.bot-spark.is-on .bot-bars i { transform: none; }
+.bot-spark.is-on .bot-spark-v { opacity: 1; }
+
+.bot-foot {
+  margin-top: 12px;
+  font-size: .8125rem; line-height: 1.4; color: color-mix(in oklab, var(--paper) 70%, var(--fog));
+}
+
+/* ---------------- input ---------------- */
+.bot-input {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 12px;
+  background: var(--ink-2);
+  border-top: 1px solid var(--line);
+}
+.bot-menu {
+  flex: none; width: 38px; height: 38px; display: grid; place-items: center;
+  border: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: .875rem; color: var(--paper);
+}
+.bot-field {
+  position: relative; flex: 1; min-width: 0; height: 38px;
+  display: flex; align-items: center; padding: 0 12px;
+  background: var(--ink); border: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: .8125rem; white-space: nowrap; overflow: hidden;
+}
+.bot-ph { position: absolute; left: 24px; color: var(--fog); }
+.bot-field.has-text .bot-ph { visibility: hidden; }
+/* block caret = the typed span's right border, so no box moves while typing (CLS 0) */
+.bot-typed-cmd { color: var(--paper); border-right: 7px solid var(--paper); padding-right: 1px; animation: bot-caret 1s steps(1, end) infinite; }
+.bot-caret { display: none; }
+@keyframes bot-caret { 0%, 49% { border-right-color: var(--paper); } 50%, 100% { border-right-color: transparent; } }
+.bot-send {
+  flex: none; position: relative; width: 38px; height: 38px;
+  border: 1px solid var(--line); background: var(--ink);
+  transition: background var(--d-micro) var(--e-out), border-color var(--d-micro);
+}
+.bot-send::before { content: ""; position: absolute; left: 50%; top: 12px; width: 1px; height: 14px; background: var(--paper); transform: translateX(-50%); }
+.bot-send::after {
+  content: ""; position: absolute; left: 50%; top: 12px; width: 7px; height: 7px;
+  border-left: 1px solid var(--paper); border-top: 1px solid var(--paper);
+  transform: translateX(-50%) rotate(45deg);
+}
+.bot-send.is-sent { background: var(--paper); border-color: var(--paper); }
+.bot-send.is-sent::before { background: var(--ink); }
+.bot-send.is-sent::after { border-color: var(--ink); }
+
+/* ---------------- reduced motion ---------------- */
+.bot-term.is-static .bot-msg, .bot-term.is-static .bot-msg > * { transition: none; }
+.bot-term.is-static .bot-typed-cmd { animation: none; }
+.bot-term.is-static .bot-card.is-done .bot-chip { animation: none; }
+.bot-term.is-static .bot-bars i, .bot-term.is-static .bot-spark-v { transition: none; }
+
+/* ---------------- phone ---------------- */
+@media (max-width: 800px) {
+  .bot-term { --bot-h: 540px; }
+  .bot-pane { grid-template-rows: minmax(60px, auto) auto 1fr 64px; }
+  .bot-bar { padding: 8px 12px; }
+  .bot-pin { padding: 8px 12px 9px; }
+  .bot-msg { left: 12px; right: 12px; }
+  .bot-card { padding: 12px 12px 10px; }
+  .bot-name b { font-size: .9375rem; }
+  .bot-name > span { white-space: normal; overflow: visible; }  /* commands wrap instead of being cut */
+  .bot-bars { gap: 2px; }
+  .bot-spark { gap: 10px; }
+}

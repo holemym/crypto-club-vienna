@@ -1,0 +1,51 @@
+/* Round 4: the club's own brand (reviews/R4-BRAND.md), values read from cryptoclubvienna.com CSS.
+   Register: black ground, one violet accent, soft corners. Violet = the club (primary button, accents, our venues).
+   Light = live: the event CTA and the next-event chip, as on their site. Motion pack: round 3 budget, four moments. */
+:root {
+  color-scheme: dark;
+  /* colour */
+  --ink: #000001;          /* ground */
+  --ink-2: #0a131f;        /* raised band, card fill */
+  --ink-3: #121e2e;        /* hover surface */
+  --line: #434366;         /* card and divider lines */
+  --line-soft: #1d1d33;    /* quiet dividers inside cards */
+  --fog: #b6b9c2;          /* body copy, labels */
+  --paper: #f8fbff;        /* headings, primary text */
+  --light: #eaedf2;        /* light button, live chip */
+  --on-light: #0a0a19;     /* text on light */
+  --accent: #af00ff;       /* brand violet */
+  --accent-deep: #7704db;  /* hover, pressed */
+  --accent-text: #c766ff;  /* violet for text under 24px: 6.8:1 on black (brand violet is 4.3:1) */
+  --on-accent: #ffffff;
+  --ink-deep: #000001;     /* map ground */
+  /* Vienna U-Bahn lines: map wayfinding only (toggle, off by default) */
+  --u1: #e2002a; --u2: #a762a3; --u3: #ee7d00; --u4: #31a354; --u6: #9d6930;
+  /* type */
+  --f-display: "Syne", "Arial Black", system-ui, sans-serif;
+  --f-body: "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --f-label: "Quicksand", "Inter", system-ui, sans-serif;
+  --f-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --t-hero: clamp(2.9rem, 7.2vw, 7.4rem);
+  --t-1: clamp(2.1rem, 4.2vw, 3.9rem);
+  --t-2: clamp(1.6rem, 2.8vw, 2.5rem);
+  --t-3: clamp(1.2rem, 1.6vw, 1.5rem);
+  --t-lede: clamp(1.05rem, 1.25vw, 1.25rem);
+  --t-body: clamp(1rem, 1.05vw, 1.0625rem);
+  --t-label: clamp(1rem, 1.1vw, 1.125rem);
+  --t-small: 0.875rem;
+  --t-mono: 0.75rem;
+  --t-mono-s: 0.6875rem;   /* floor: 11px */
+  /* space + grid */
+  --gutter: clamp(16px, 4vw, 56px);
+  --sq: clamp(10px, 1.2vw, 16px);   /* lattice unit: events chain and map only */
+  --max: 1440px;
+  /* shape (their site: cards and photos 15px, buttons 6px, icon tiles ~10%) */
+  --radius: 15px;
+  --radius-btn: 6px;
+  --radius-sm: 8px;
+  --bd-card: 1px solid var(--line);
+  /* motion */
+  --e-out: cubic-bezier(.16, 1, .3, 1);   /* expo.out */
+  --e-io: cubic-bezier(.65, 0, .35, 1);
+  --d-micro: 160ms; --d-ui: 320ms; --d-in: 800ms;
+}

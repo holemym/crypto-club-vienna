@@ -1,0 +1,11 @@
+# secrets and local deploy state
+.env*
+.vercel
+# files with people in them: add here until the club confirms consent
+site/assets/photos/
+reviews/r4/
+_brand/
+# tooling
+__pycache__/
+node_modules/
+.DS_Store
